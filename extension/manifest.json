@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "중부대 LMS 과제 동기화",
+  "version": "1.4.0",
+  "description": "로그인된 중부대학교 LMS 세션에서 과제 마감일과 인정 기한을 읽어 과제 체크보드로 보냅니다.",
+  "permissions": ["activeTab", "storage", "tabs", "scripting"],
+  "host_permissions": [
+    "https://edu.joongbu.ac.kr/*",
+    "https://ccanvas.joongbu.ac.kr/*",
+    "https://jungbu-task-board.korpineapple0229.chatgpt.site/*"
+  ],
+  "action": {
+    "default_title": "중부대 LMS 과제 동기화",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://edu.joongbu.ac.kr/*"],
+      "js": ["lms-scraper.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://ccanvas.joongbu.ac.kr/*"],
+      "js": ["lms-scraper.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://jungbu-task-board.korpineapple0229.chatgpt.site/*"],
+      "js": ["dashboard-bridge.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

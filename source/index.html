@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#3558e6" />
+    <title>과제 체크보드 — 마감일을 놓치지 않게</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Nanum+Square+Neo:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="grain"></div>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="#top" aria-label="과제 체크보드 첫 화면">
+          <span class="brand-mark"><i></i><i></i><i></i><i></i></span>
+          <span>과제 체크보드</span>
+        </a>
+
+        <div class="semester-picker">
+          <span class="eyebrow">현재 학기</span>
+          <button type="button" class="semester-button">2026년 2학기 <span>⌄</span></button>
+        </div>
+
+        <nav class="nav-links" aria-label="대시보드 메뉴">
+          <a class="active" href="#top"><span class="nav-icon">▦</span>한눈에 보기</a>
+          <a href="#assignment-list"><span class="nav-icon">□</span>전체 과제 <b id="navTaskCount">0</b></a>
+          <a href="#calendar"><span class="nav-icon">◫</span>마감 캘린더</a>
+        </nav>
+
+        <section class="course-nav" aria-labelledby="courseNavTitle">
+          <div class="section-label">
+            <h2 id="courseNavTitle">내 과목</h2>
+            <span id="courseCount">0</span>
+          </div>
+          <div id="courseNavList"></div>
+        </section>
+
+        <div class="sidebar-bottom">
+          <button type="button" class="text-button" id="openImport"><span>↥</span> LMS 내용 붙여넣기</button>
+          <button type="button" class="text-button" id="exportData"><span>⇩</span> 내 데이터 내보내기</button>
+          <p>이 기기의 브라우저에만<br />과제 정보가 저장됩니다.</p>
+        </div>
+      </aside>
+
+      <main id="top">
+        <header class="topbar">
+          <div class="greeting">
+            <p id="todayLabel">2026. 11. 10. 화요일</p>
+            <h1>오늘도, <em>마감은</em> 챙겼지?</h1>
+          </div>
+          <div class="top-actions">
+            <div id="accountControl" class="account-control" hidden></div>
+            <button type="button" class="icon-button" id="themeToggle" aria-label="테마 전환">◐</button>
+            <button type="button" class="sync-button" id="openSync"><span>↻</span> LMS 동기화</button>
+            <button type="button" class="add-button" id="openAdd"><span>＋</span> 과제 추가</button>
+          </div>
+        </header>
+
+        <section class="attention-strip" aria-label="오늘의 마감 안내">
+          <div class="pulse-dot"></div>
+          <div><strong id="attentionTitle">이번 주에 마감되는 과제가 있어요.</strong><span id="attentionDescription">지금 가장 가까운 과제부터 확인해 보세요.</span></div>
+          <a href="#assignment-list" id="attentionLink">바로 보기 <span>→</span></a>
+        </section>
+
+        <section class="stats" aria-label="과제 현황">
+          <article class="stat-card cobalt">
+            <span class="stat-label">미제출 과제</span>
+            <strong id="openCount">0</strong>
+            <small>인정 기한이 남은 과제</small>
+            <span class="stat-shape shape-square"></span>
+          </article>
+          <article class="stat-card sun">
+            <span class="stat-label">72시간 이내</span>
+            <strong id="urgentCount">0</strong>
+            <small>마감이 가까워요</small>
+            <span class="stat-shape shape-star">✦</span>
+          </article>
+          <article class="stat-card lavender">
+            <span class="stat-label">제출 완료</span>
+            <strong id="doneCount">0</strong>
+            <small>이번 학기 누적</small>
+            <span class="stat-shape shape-check">✓</span>
+          </article>
+          <article class="stat-card ink">
+            <span class="stat-label">과제 진행률</span>
+            <strong id="progressText">0%</strong>
+            <small id="progressCaption">아직 등록된 과제가 없어요</small>
+            <div class="mini-progress"><i id="progressBar"></i></div>
+          </article>
+        </section>
+
+        <div class="dashboard-grid">
+          <section class="deadline-panel" aria-labelledby="deadlineTitle">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">UP NEXT</p>
+                <h2 id="deadlineTitle">다가오는 마감</h2>
+              </div>
+              <div class="view-tabs" role="tablist" aria-label="마감 보기">
+                <button type="button" class="selected" data-window="week">이번 주</button>
+                <button type="button" data-window="all">전체</button>
+              </div>
+            </div>
+            <div id="timeline" class="timeline"></div>
+            <button type="button" class="panel-link" id="showAllAssignments">모든 과제 보기 <span>→</span></button>
+          </section>
+
+          <section class="week-panel" id="calendar" aria-labelledby="weekTitle">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">THIS WEEK</p>
+                <h2 id="weekTitle">이번 주 리듬</h2>
+              </div>
+              <span class="week-total" id="weekTotal">0건</span>
+            </div>
+            <div class="week-days" id="weekDays"></div>
+            <div class="week-note" id="weekNote">이번 주는 여유롭네요.</div>
+          </section>
+        </div>
+
+        <section class="assignments-section" id="assignment-list" aria-labelledby="assignmentTitle">
+          <div class="section-header">
+            <div>
+              <p class="eyebrow">ALL ASSIGNMENTS</p>
+              <h2 id="assignmentTitle">과제 보드</h2>
+            </div>
+            <button type="button" class="course-filter" id="courseFilter"><span class="filter-dot"></span><span id="courseFilterText">전체 과목</span><b>⌄</b></button>
+          </div>
+          <div class="filter-row" id="statusFilters" aria-label="과제 상태 필터">
+            <button type="button" class="filter-chip active" data-filter="all">전체 <b id="allFilterCount">0</b></button>
+            <button type="button" class="filter-chip" data-filter="urgent">임박</button>
+            <button type="button" class="filter-chip" data-filter="open">미제출</button>
+            <button type="button" class="filter-chip" data-filter="submitted">제출 완료</button>
+            <button type="button" class="filter-chip" data-filter="late">인정 기한 중</button>
+          </div>
+          <div class="assignment-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>과제</th>
+                  <th>과목</th>
+                  <th>마감 기한</th>
+                  <th>인정 기한</th>
+                  <th>상태</th>
+                  <th><span class="sr-only">동작</span></th>
+                </tr>
+              </thead>
+              <tbody id="assignmentRows"></tbody>
+            </table>
+          </div>
+          <div id="emptyState" class="empty-state" hidden>
+            <div>✦</div>
+            <strong>표시할 과제가 없어요</strong>
+            <p>필터를 바꾸거나 새 과제를 추가해 보세요.</p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="modal" id="assignmentModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-card">
+        <button class="modal-close" type="button" data-close-modal aria-label="닫기">×</button>
+        <p class="eyebrow">NEW ASSIGNMENT</p>
+        <h2 id="modalTitle">과제 추가하기</h2>
+        <form id="assignmentForm">
+          <label>과제 이름<input required name="title" placeholder="예: 3주차 과제" /></label>
+          <label>과목<input required name="course" list="courseOptions" placeholder="예: 시스템프로그래밍" /></label>
+          <datalist id="courseOptions"></datalist>
+          <div class="two-columns">
+            <label>마감 기한<input required name="due" type="datetime-local" /></label>
+            <label>인정 기한<input name="recognition" type="datetime-local" /></label>
+          </div>
+          <label>과제 링크 <input name="url" type="url" placeholder="LMS 과제 페이지 주소 (선택)" /></label>
+          <label class="check-label"><input name="submitted" type="checkbox" /> <span>이미 제출했어요</span></label>
+          <button class="submit-button" type="submit">과제 저장하기 <span>→</span></button>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal" id="importModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="importTitle">
+      <div class="modal-card import-card">
+        <button class="modal-close" type="button" data-close-modal aria-label="닫기">×</button>
+        <p class="eyebrow">QUICK IMPORT</p>
+        <h2 id="importTitle">LMS 내용을 붙여넣어 주세요</h2>
+        <p class="modal-description">과제명 · 과목명 · 마감일 · 인정기한이 담긴 텍스트를 붙이면, 날짜가 인식된 항목을 미리보기로 보여드려요.</p>
+        <textarea id="importText" rows="8" placeholder="예시\n시스템프로그래밍 | 5주차 실습 보고서 | 2026-11-12 23:59 | 2026-11-15 23:59\n암호학 | RSA 구현 과제 | 2026-11-16 18:00"></textarea>
+        <div class="import-help">각 줄에 <code>과목 | 과제명 | 마감일 | 인정기한</code> 순으로 넣어 주세요.</div>
+        <button class="submit-button" type="button" id="importButton">미리보기 만들기 <span>→</span></button>
+        <div id="importPreview" class="import-preview"></div>
+      </div>
+    </div>
+
+    <div class="modal" id="syncModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="syncTitle">
+      <div class="modal-card sync-card">
+        <button class="modal-close" type="button" data-close-modal aria-label="닫기">×</button>
+        <p class="eyebrow">REAL LMS SYNC</p>
+        <h2 id="syncTitle">실제 LMS 과제 동기화</h2>
+        <p class="modal-description">로그인된 LMS 세션을 이용해 과제명, 마감 기한, 인정 기한을 읽어옵니다. 아이디·비밀번호·OTP는 이 대시보드나 확장 프로그램에 저장되지 않습니다.</p>
+        <ol class="sync-steps">
+          <li><b>1</b><span><strong>확장 프로그램 압축 파일을 받으세요.</strong><small>아래 버튼으로 내려받습니다.</small></span></li>
+          <li><b>2</b><span><strong>Whale/Chrome의 확장 프로그램 관리 화면에서 ‘압축해제된 확장 프로그램 로드’를 누르세요.</strong><small>압축을 푼 <code>lms-sync-extension</code> 폴더를 선택합니다.</small></span></li>
+          <li><b>3</b><span><strong>이 창을 연 뒤 LMS에 직접 로그인하고 확장 프로그램의 ‘실제 과제 동기화’를 누르세요.</strong><small>로그아웃되어 OTP가 보이면 직접 인증한 뒤 다시 동기화합니다.</small></span></li>
+        </ol>
+        <a class="submit-button extension-download" href="lms-sync-extension.zip" download>동기화 확장 프로그램 받기 <span>↓</span></a>
+        <p class="sync-footnote">마지막 동기화 후 이 페이지를 열어 두면 결과가 자동으로 반영됩니다.</p>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" role="status"></div>
+    <script src="app.js"></script>
+  </body>
+</html>

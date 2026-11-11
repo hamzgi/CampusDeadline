@@ -1,0 +1,27 @@
+{
+  "name": "jungbu-task-board-nextjs",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test:smoke": "node tests/smoke.mjs",
+    "test:extension": "node tests/extension-smoke.mjs",
+    "test:auth-ui": "node tests/auth-ui.mjs",
+    "test:auth-server": "node tests/auth-server.mjs",
+    "test:rls": "node tests/rls.mjs"
+  },
+  "dependencies": {
+    "@supabase/ssr": "0.12.7",
+    "@supabase/supabase-js": "2.119.0",
+    "fflate": "0.8.3",
+    "next": "16.4.6",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.16",
+    "playwright": "1.65.0"
+  }
+}
